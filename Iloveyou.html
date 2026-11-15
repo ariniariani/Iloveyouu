@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hati I Love You</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(circle, #310817 0%, #12040d 48%, #050308 100%);
+    font-family: Arial, sans-serif;
+    color: white;
+  }
+  .wrap { width: min(94vw, 620px); text-align: center; }
+  h1 {
+    margin: 0 0 12px;
+    color: #ffb6ca;
+    font-size: clamp(20px, 5vw, 30px);
+    letter-spacing: 4px;
+    text-shadow: 0 0 12px #ff174f;
+  }
+  svg { width: 100%; height: auto; overflow: visible; }
+  .heart-word {
+    fill: #ff527a;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px #ff174f);
+    animation: show 0.7s ease forwards, glow 2s ease-in-out infinite alternate;
+  }
+  .heart-word:nth-child(3n) { fill: #ff9bb4; }
+  .heart-word:nth-child(4n) { fill: #ff245b; }
+  .center {
+    fill: #fff0f5;
+    font-size: 27px;
+    font-weight: bold;
+    text-anchor: middle;
+    filter: drop-shadow(0 0 8px #ff174f);
+    animation: beat 1.2s ease-in-out infinite;
+  }
+  .caption {
+    margin-top: -2px;
+    color: #ff9bb4;
+    font-size: 12px;
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px #ff174f;
+  }
+  @keyframes show { to { opacity: 1; } }
+  @keyframes glow { from { filter: drop-shadow(0 0 2px #ff174f); } to { filter: drop-shadow(0 0 9px #ff174f); } }
+  @keyframes beat { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>FOR YOU ♥</h1>
+    <svg viewBox="0 0 600 500" role="img" aria-label="Hati dari tulisan I love you">
+      <defs>
+        <path id="heartPath"
+          d="M300 445 C260 410 65 280 65 155
+             C65 55 190 25 260 100
+             C280 120 292 140 300 155
+             C308 140 320 120 340 100
+             C410 25 535 55 535 155
+             C535 280 340 410 300 445 Z"/>
+      </defs>
+      <g id="heartWords"></g>
+      <text x="300" y="258" class="center">I LOVE YOU ♥</text>
+    </svg>
+    <div class="caption">ALWAYS & FOREVER</div>
+  </main>
+
+<script>
+  const svgNS = "http://www.w3.org/2000/svg";
+  const group = document.getElementById("heartWords");
+  const path = document.getElementById("heartPath");
+  const length = path.getTotalLength();
+  const total = 76;
+
+  // Tulisan mengikuti garis bentuk hati.
+  for (let i = 0; i < total; i++) {
+    const distance = (i / total) * length;
+    const point = path.getPointAtLength(distance);
+    const next = path.getPointAtLength(Math.min(distance + 1, length));
+    const angle = Math.atan2(next.y - point.y, next.x - point.x) * 180 / Math.PI;
+
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", point.x);
+    text.setAttribute("y", point.y);
+    text.setAttribute("class", "heart-word");
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("transform", `rotate(${angle}, ${point.x}, ${point.y})`);
+    text.style.animationDelay = `${i * 0.055}s`;
+    text.textContent = "I LOVE YOU";
+    group.appendChild(text);
+  }
+
+  // Tambahkan tulisan kecil di bagian dalam agar hati tampak lebih penuh.
+  const rows = [
+    { y: 135, x: [205, 395] },
+    { y: 165, x: [165, 435] },
+    { y: 195, x: [145, 455] },
+    { y: 300, x: [165, 435] },
+    { y: 330, x: [195, 405] },
+    { y: 360, x: [235, 365] }
+  ];
+  let delay = total * 0.055;
+  rows.forEach(row => row.x.forEach(x => {
+    const text = document.createElementNS(svgNS, "text");
+    text.setAttribute("x", x);
+    text.setAttribute("y", row.y);
+    text.setAttribute("class", "heart-word");
+    text.setAttribute("text-anchor", "middle");
+    text.style.animationDelay = `${delay}s`;
+    text.textContent = "I LOVE YOU";
+    group.appendChild(text);
+    delay += 0.08;
+  }));
+</script>
+</body>
+</html>
+
